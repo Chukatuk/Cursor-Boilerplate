@@ -8,6 +8,42 @@ set -uo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PASS=0
 FAIL=0
+STRICT=false
+
+usage() {
+  cat <<EOF
+
+  Cursor Cognitive Boilerplate — Validation
+  ==========================================
+
+  Usage: ./validate.sh [--strict] [--help]
+
+  Flags:
+    --strict  Run additional checks for unfilled placeholders in templates.
+    --help    Show this message and exit.
+
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    --strict)
+      STRICT=true
+      shift
+      ;;
+    *)
+      echo ""
+      echo "  Error: unknown flag '$1'"
+      echo "  Run ./validate.sh --help for usage."
+      echo ""
+      exit 1
+      ;;
+  esac
+done
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -71,16 +107,16 @@ check_no_bak_files() {
   fi
 }
 
-check_no_unfilled_placeholder() {
+check_no_unfilled_placeholders_in_file() {
   local file="$SCRIPT_DIR/$1"
-  local placeholder="$2"
+  local pattern='\[(PROJECT NAME|DESCRIBE THE CORE IDEA|WHO IS THIS FOR|DATE)\]'
   if [ ! -f "$file" ]; then
     return
   fi
-  if grep -q "$placeholder" "$file"; then
-    fail "$1 still contains placeholder: $placeholder"
+  if grep -Eq "$pattern" "$file"; then
+    fail "$1 still contains unfilled placeholders"
   else
-    ok "$1 has no '$placeholder' placeholder"
+    ok "$1 has no unfilled placeholders"
   fi
 }
 
@@ -141,6 +177,7 @@ check_frontmatter ".cursor/rules/200-chat-summaries.mdc"
 
 # Config files
 check_file ".editorconfig"
+check_file ".env.example"
 
 # Environment tools
 if command -v git >/dev/null 2>&1; then
@@ -157,6 +194,17 @@ fi
 
 # No leftover sed backup files
 check_no_bak_files
+
+# Strict placeholder checks
+if [ "$STRICT" = true ]; then
+  check_no_unfilled_placeholders_in_file "memory-bank/projectbrief.md"
+  check_no_unfilled_placeholders_in_file "memory-bank/techContext.md"
+  check_no_unfilled_placeholders_in_file "memory-bank/activeContext.md"
+  check_no_unfilled_placeholders_in_file "memory-bank/productContext.md"
+  check_no_unfilled_placeholders_in_file "memory-bank/systemPatterns.md"
+  check_no_unfilled_placeholders_in_file "memory-bank/progress.md"
+  check_no_unfilled_placeholders_in_file "logs/DEVELOPMENT_LOG.md"
+fi
 
 # Examples directory
 check_dir "examples/todo-app"

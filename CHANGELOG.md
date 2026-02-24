@@ -2,6 +2,22 @@
 
 All notable changes to the Cursor Cognitive Boilerplate are documented here.
 
+## [3.2.0] — 2026-02-23
+
+Improved setup safety, added script automation flags, and strengthened validation.
+
+### Added
+- **`.env.example`**: New first-time integration template for environment variables.
+- **`init.sh` flags**: Added `--project-name`, `--vision`, `--audience`, `--yes`, and `--dry-run` for non-interactive or preview setup.
+- **`install.sh --dry-run`**: Preview copy/merge operations without writing files.
+- **`validate.sh --strict`**: Extra checks that fail when required files still contain unfilled placeholders.
+
+### Changed
+- **Quick start copy command in `README.md`** now uses a dotfile-safe copy command (`cp -R source/. target/`) so `.cursor/` and other dotfiles are included.
+- **`init.sh` idempotency check** now verifies placeholders across all required memory files plus `logs/DEVELOPMENT_LOG.md`, not just one file.
+- **`install.sh`** now copies `.env.example` into target projects.
+- **`validate.sh`** now checks that `.env.example` exists.
+
 ## [3.1.0] — 2026-02-23
 
 Reduced context window overhead, added code quality rule, improved separation of concerns.

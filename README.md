@@ -20,7 +20,8 @@ This boilerplate gives the agent an **external memory system** in plain markdown
 
 ```bash
 # 1. Copy the boilerplate into your project root
-cp -r cursor-boilerplate/* your-project/
+mkdir -p your-project
+cp -R cursor-boilerplate/. your-project/
 
 # 2. Run the setup script
 cd your-project
@@ -40,12 +41,16 @@ rm .cursor/rules/300-*-example.mdc   # or edit them for your stack
 # Safely copies boilerplate files without overwriting anything that exists
 ./install.sh /path/to/your/project
 
+# Preview what would be copied without writing files
+./install.sh --dry-run /path/to/your/project
+
 # Then run init from the target project
 cd /path/to/your/project
 bash /path/to/cursor-boilerplate/init.sh
 ```
 
 `install.sh` skips files that already exist, merges `.gitignore` entries, and never overwrites.
+Use `--dry-run` to preview copy/merge operations before applying them.
 
 ---
 
@@ -56,6 +61,7 @@ your-project/
 ├── AGENTS.md                           # Agent entry point — session start instructions
 ├── LICENSE                             # MIT license
 ├── .editorconfig                       # Editor configuration
+├── .env.example                        # First-time environment variable template
 ├── init.sh                             # Interactive setup script (new projects)
 ├── install.sh                          # Install into existing project
 ├── validate.sh                         # Checks boilerplate is internally consistent
@@ -208,6 +214,28 @@ Add these to `.cursor/mcp.json` as needed:
 - **Adjust the plan threshold**: Edit `100-workflow-loop.mdc` if you want more or less planning ceremony.
 - **Add chat summary categories**: Edit `.cursor/rules/200-chat-summaries.mdc` to add project-specific categories.
 
+### `init.sh` automation flags
+
+Use these when you want repeatable setup in scripts or CI:
+
+```bash
+# Fully non-interactive setup
+./init.sh --project-name "My Project" --vision "Internal analytics API" --audience "Platform team" --yes
+
+# Preview replacements without writing files
+./init.sh --dry-run --project-name "My Project"
+```
+
+### First-time integrations
+
+Copy `.env.example` to `.env` and replace placeholder values before connecting external services:
+
+```bash
+cp .env.example .env
+```
+
+Keep `.env` out of git. Commit only `.env.example`.
+
 ---
 
 ## Examples
@@ -224,7 +252,10 @@ Run `./validate.sh` to check that the boilerplate is internally consistent and y
 - Rule files have valid frontmatter
 - **Git and Node.js are installed**
 - **.editorconfig exists**
+- **.env.example exists**
 - No leftover `.bak` files
+
+Run `./validate.sh --strict` in initialized project copies to also fail if required memory/log files still contain unfilled boilerplate placeholders (`[PROJECT NAME]`, `[DATE]`, and similar).
 
 ---
 
