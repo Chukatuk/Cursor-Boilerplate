@@ -1,0 +1,45 @@
+---
+description: Governs how the AI creates, names, and structures new .mdc rule files. Always active.
+alwaysApply: true
+---
+
+# Rule Management
+
+When creating or editing rules in `.cursor/rules/`, follow this governance spec exactly.
+
+## File naming
+
+- All rule files go in `.cursor/rules/`
+- Use lowercase kebab-case with `.mdc` extension: `my-rule-name.mdc`
+- Prefix with a number to control load order: `000-` for meta/governance, `001-099` for agent behavior, `100-199` for workflow, `200-299` for context/memory, `300+` for project-specific tech rules
+- One concern per file. If a rule grows beyond 500 lines, split it.
+
+## Required frontmatter
+
+Every rule must start with a YAML block:
+
+```yaml
+---
+description: <one sentence — highly specific, used by semantic search to surface this rule>
+globs: <optional glob pattern, e.g. **/*.ts — omit if not file-scoped>
+alwaysApply: <true for global rules, false for file-scoped rules>
+---
+```
+
+- `description` must be specific enough that the IDE's semantic search can match it to a relevant user request. Bad: "TypeScript rules". Good: "Enforces async/await error handling patterns for TypeScript API routes".
+- Use `alwaysApply: true` sparingly — only for rules that genuinely apply to every task.
+- Use `globs` for rules that only matter in specific file contexts.
+
+## Content guidelines
+
+- See `creating-rules.mdc` for full authoring best practices.
+- Point to canonical code files instead of pasting large blocks.
+- No generic framework docs — only project-specific patterns and constraints.
+- Include both DO and DON'T examples when the distinction is non-obvious.
+
+## When the AI creates a new rule
+
+1. Determine the correct numeric prefix based on concern type.
+2. Draft the frontmatter with a precise `description`.
+3. Keep the body under 500 lines and focused on one concern.
+4. Present the draft to the human for approval — never write a rule file autonomously without showing it first.

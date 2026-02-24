@@ -1,0 +1,59 @@
+---
+description: Protects against context window degradation by maintaining an append-only log system and mandating session-start orientation. Always active.
+alwaysApply: true
+---
+
+# Context Preservation
+
+LLMs lose context as sessions grow. This rule ensures critical project state is always written to disk so a fresh session can pick up exactly where the last one left off.
+
+## Log system structure
+
+All logs live in the `logs/` directory:
+
+- `logs/LOG_INDEX.md` — the index. One row per log file: date, one-sentence summary, link to detail file.
+- `logs/LOG_001.md`, `logs/LOG_002.md`, ... — numbered detail log files. Append-only. Never edit old files.
+
+## When to write to the log
+
+Append a log entry to the current active log file after:
+- Any significant file creation, modification, or deletion
+- Any terminal command that produces a meaningful result
+- Any error encountered and how it was resolved
+- Completing a plan phase or act phase
+
+A log entry looks like:
+
+```
+## [YYYY-MM-DD HH:MM] <short title>
+**Files changed**: list of files
+**Commands run**: list of commands (if any)
+**Outcome**: what happened
+**Errors**: any errors and resolutions (if any)
+**Next**: immediate next step
+```
+
+## Log rotation — creating a new file
+
+When the current active log file exceeds approximately 5000 characters:
+1. Create the next numbered file: if `LOG_001.md` is full, create `LOG_002.md`.
+2. Add a new row to `LOG_INDEX.md`:
+   ```
+   | LOG_002.md | YYYY-MM-DD | One-sentence summary of what this log covers | [link](logs/LOG_002.md) |
+   ```
+3. Begin appending new entries to the new file.
+4. **Never modify or summarize old log files.** They are permanent history.
+
+## Session start — orientation protocol
+
+At the start of every new chat session, before doing anything else:
+1. Read `logs/LOG_INDEX.md` to identify the most recent log file.
+2. Read the most recent log file to understand the last known state.
+3. Read `memory-bank/activeContext.md` for current focus, blockers, and next steps.
+4. Confirm orientation to the human: briefly state what you understand the current state to be, then ask how to proceed.
+
+## Tool call checkpoint
+
+Every ~25 tool calls within a session, pause and:
+1. Append a checkpoint entry to the active log file documenting current progress.
+2. Notify the human: "Checkpoint: I've made significant progress. Here's the current state: [summary]. If the session is getting long, now is a good time to start a fresh chat."

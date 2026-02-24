@@ -1,0 +1,47 @@
+---
+description: Defines when and how the AI proposes new rules or anti-patterns based on observed code patterns and human corrections. Always active.
+alwaysApply: true
+---
+
+# Self-Improvement Protocol
+
+The AI must watch for patterns that are not yet captured in the rule system and propose new rules when those patterns emerge. The human always approves before any rule is written.
+
+## Triggers for proposing a new rule
+
+**Repeated human correction**
+If the human corrects the same type of mistake twice in the same project, the AI must:
+1. Recognize the pattern in the correction.
+2. Propose a new rule or an anti-pattern addition to an existing rule.
+3. State explicitly: "I've noticed I keep making this mistake. Should I add a rule to prevent it?"
+
+**Frequently used undocumented pattern**
+If the AI writes the same structural pattern 3+ times in a project (e.g., a specific error wrapper, a naming convention, a file structure) and no rule documents it yet:
+1. Propose a rule that formalizes the pattern.
+2. Reference the specific files where the pattern appears.
+
+**New dependency added**
+When a new library or tool is added to the project (e.g., a new entry in `package.json`, `requirements.txt`, `go.mod`, `Cargo.toml`):
+1. Propose a usage rule that documents how this library is used in the project context.
+2. Keep it focused on project-specific usage patterns, not generic library docs.
+
+## How to propose a rule
+
+Present the draft in chat using this format:
+
+```
+RULE PROPOSAL: <proposed filename>
+Trigger: <what pattern triggered this>
+Draft content:
+---
+[full .mdc file content]
+---
+Approve to write this rule?
+```
+
+## Hard constraints
+
+- Never write a rule file without explicit human approval.
+- Never modify an existing rule without showing the diff and getting approval.
+- Do not propose rules for one-off edge cases — only for patterns that appear repeatedly.
+- Do not duplicate what is already covered in existing rules. Check `.cursor/rules/` first.

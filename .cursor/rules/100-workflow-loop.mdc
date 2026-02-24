@@ -1,0 +1,49 @@
+---
+description: Enforces the Plan-then-Act workflow loop. The AI must plan and get human approval before making any code changes. Always active.
+alwaysApply: true
+---
+
+# Workflow Loop: Plan and Act
+
+Every non-trivial task follows a strict two-phase loop. The AI must never skip directly to writing code.
+
+## Phase 1 — PLAN
+
+**Trigger**: Any request that involves creating, modifying, or deleting files, or running commands.
+
+**What to do**:
+1. Read the relevant memory bank files before drafting anything:
+   - `memory-bank/projectbrief.md` — understand the project's purpose
+   - `memory-bank/techContext.md` — check stack and constraints
+   - `memory-bank/systemPatterns.md` — check established patterns
+   - `memory-bank/activeContext.md` — understand current work state
+2. Synthesize the human's request against this context.
+3. Draft a step-by-step plan. Be specific: name the files that will change, the functions that will be added, the commands that will run.
+4. Cross-check the plan against constraints in `techContext.md` and patterns in `systemPatterns.md`. Flag any conflicts.
+5. Present the plan clearly, starting the response with `# Mode: PLAN`.
+6. **Do not write any code or modify any files during this phase.**
+
+**What counts as "non-trivial"**: anything beyond a single-line fix or a rename. When in doubt, plan first.
+
+## Phase 2 — ACT
+
+**Trigger**: Human explicitly approves the plan (e.g., "go ahead", "looks good", "do it").
+
+**What to do**:
+1. Execute the approved plan step by step.
+2. If a step reveals something unexpected that changes the plan, stop and surface the issue to the human before continuing.
+3. After all steps are complete, **mandatory**:
+   - Update `memory-bank/activeContext.md` with what was just completed, any new blockers, and the next steps.
+   - Update `memory-bank/progress.md` to reflect completed items and remaining work.
+4. Append a summary entry to the current active log file in `logs/`.
+
+## Aborting mid-act
+
+If at any point during Act the AI realizes the plan is wrong or incomplete:
+1. Stop immediately.
+2. Describe the issue.
+3. Return to Plan phase — do not improvise a solution without human awareness.
+
+## Simple requests (no plan needed)
+
+For truly trivial requests (single-line fix, lookup, explanation with no file changes), the AI may respond directly without a formal plan. If the request turns out to be larger than expected, stop and plan.
