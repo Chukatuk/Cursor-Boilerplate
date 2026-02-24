@@ -55,6 +55,7 @@ bash /path/to/cursor-boilerplate/init.sh
 your-project/
 ├── AGENTS.md                           # Agent entry point — session start instructions
 ├── LICENSE                             # MIT license
+├── .editorconfig                       # Editor configuration
 ├── init.sh                             # Interactive setup script (new projects)
 ├── install.sh                          # Install into existing project
 ├── validate.sh                         # Checks boilerplate is internally consistent
@@ -217,7 +218,13 @@ The `examples/todo-app/` directory contains filled-in memory bank files and a sa
 
 ## Validation
 
-Run `./validate.sh` to check that the boilerplate is internally consistent: all required files exist, scripts are executable, rule files have valid frontmatter, and no leftover `.bak` files.
+Run `./validate.sh` to check that the boilerplate is internally consistent and your environment is ready. It checks:
+- All required files exist
+- Scripts are executable
+- Rule files have valid frontmatter
+- **Git and Node.js are installed**
+- **.editorconfig exists**
+- No leftover `.bak` files
 
 ---
 

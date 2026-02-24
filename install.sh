@@ -131,6 +131,10 @@ fi
 
 copy_file "$BOILERPLATE_DIR/AGENTS.md" "$TARGET/AGENTS.md"
 
+# ── Copy .editorconfig ────────────────────────────────────────────────────────
+
+copy_file "$BOILERPLATE_DIR/.editorconfig" "$TARGET/.editorconfig"
+
 # ── Merge .gitignore ──────────────────────────────────────────────────────────
 # Appends lines from the boilerplate .gitignore that don't already exist
 # in the target's .gitignore. Never removes or overwrites existing lines.

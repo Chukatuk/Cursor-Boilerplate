@@ -152,6 +152,19 @@ Project just initialized. Fill in the remaining memory bank files and start buil
 *Last updated: $TODAY*
 ACTIVE
 
+# ── Git Init ──────────────────────────────────────────────────────────────────
+
+if [ ! -d ".git" ]; then
+  if command -v git >/dev/null 2>&1; then
+    echo ""
+    read -rp "  Initialize git repository? (y/N) " INIT_GIT
+    if [[ "$INIT_GIT" =~ ^[Yy]$ ]]; then
+      git init
+      echo "  Initialized git repository."
+    fi
+  fi
+fi
+
 # ── Done ──────────────────────────────────────────────────────────────────────
 
 echo ""

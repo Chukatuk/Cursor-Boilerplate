@@ -139,6 +139,22 @@ check_frontmatter ".cursor/rules/100-quality.mdc"
 check_frontmatter ".cursor/rules/200-context-preservation.mdc"
 check_frontmatter ".cursor/rules/200-chat-summaries.mdc"
 
+# Config files
+check_file ".editorconfig"
+
+# Environment tools
+if command -v git >/dev/null 2>&1; then
+  ok "git is installed"
+else
+  fail "git is missing"
+fi
+
+if command -v node >/dev/null 2>&1; then
+  ok "node is installed"
+else
+  echo "  WARN  node is missing (required for some MCP servers)"
+fi
+
 # No leftover sed backup files
 check_no_bak_files
 

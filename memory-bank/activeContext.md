@@ -32,6 +32,12 @@
 <!-- Decisions with reasoning. Future sessions shouldn't re-litigate these. -->
 - [DATE]: Decision and why it was made
 
+## Lessons Learned
+
+<!-- What went wrong? What should we do differently next time? -->
+- [DATE]: Issue encountered -> Solution / Prevention
+
+
 ---
 
 *Last updated: [DATE]*
