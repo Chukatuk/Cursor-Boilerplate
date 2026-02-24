@@ -1,82 +1,40 @@
-# ── OS ──────────────────────────────────────────────────────────────────────
+# ── OS ───────────────────────────────────────────────────────────────────
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
 Thumbs.db
-ehthumbs.db
 Desktop.ini
 
-# ── Environment & Secrets ────────────────────────────────────────────────────
+# ── Environment & Secrets ────────────────────────────────────────────────
 .env
-.env.local
-.env.*.local
-.env.development
-.env.staging
-.env.production
+.env.*
 *.pem
 *.key
 secrets/
 
-# ── Editor & IDE ─────────────────────────────────────────────────────────────
-# Keep .cursor/rules/ and memory-bank/ — they are part of the boilerplate
+# ── Editor / IDE ─────────────────────────────────────────────────────────
+# Keep .cursor/rules/ — it's part of the boilerplate
 .idea/
 *.swp
 *.swo
 *~
-.vscode/settings.json
-.vscode/launch.json
 
-# ── Dependency directories ───────────────────────────────────────────────────
-node_modules/
-vendor/
-.venv/
-venv/
-__pycache__/
-*.pyc
-*.pyo
-.pytest_cache/
-.mypy_cache/
-target/
-.gradle/
-
-# ── Build output ─────────────────────────────────────────────────────────────
-dist/
-build/
-out/
-.next/
-.nuxt/
-.output/
-*.egg-info/
-*.egg
-*.whl
-
-# ── Test & Coverage ──────────────────────────────────────────────────────────
-coverage/
-.coverage
-*.lcov
-htmlcov/
-.nyc_output/
-
-# ── Logs (runtime/app logs, NOT the memory-bank logs/ directory) ─────────────
-# If you want to exclude runtime app logs in a separate folder, add it here:
-# app-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# ── Package manager lock files (choose your preference) ─────────────────────
-# Uncomment the lock files you do NOT use:
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
-
-# ── Misc ─────────────────────────────────────────────────────────────────────
-*.tmp
-*.bak
-*.orig
-.cache/
-tmp/
-temp/
+# ── Add your stack-specific ignores below ────────────────────────────────
+# Uncomment or add entries for your tech stack:
+#
+# Node.js / JavaScript:
+#   node_modules/
+#   dist/
+#   .next/
+#   coverage/
+#
+# Python:
+#   .venv/
+#   __pycache__/
+#   *.pyc
+#   .pytest_cache/
+#
+# Go:
+#   /bin/
+#   /vendor/
+#
+# Rust:
+#   /target/

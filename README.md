@@ -1,26 +1,38 @@
 # Cursor Cognitive Boilerplate
 
-A universal, technology-agnostic scaffolding system for Cursor IDE. Not a code framework — a **cognitive framework** that gives your AI agent persistent memory, structured workflows, self-improvement capability, and protection against context degradation.
+A technology-agnostic scaffolding system for Cursor IDE. Not a code framework — a **cognitive framework** that gives your AI agent persistent memory, structured workflows, and self-improvement capability.
 
-Works for any project type: web apps, CLIs, games, APIs, data pipelines, embedded systems, anything.
-
----
-
-## The Problem It Solves
-
-LLMs are stateless. Every new chat session, the agent starts with zero memory of your project. As sessions grow long, the context window fills up and the agent starts "forgetting" earlier decisions and patterns — leading to inconsistent code, circular fixes, and constant re-explanation.
-
-This boilerplate solves that by giving the agent an **external memory system** stored in plain markdown files in your repo, combined with **governing rules** that tell it exactly how to use that memory.
+Works for any project: web apps, CLIs, APIs, data pipelines, anything.
 
 ---
 
-## How to Use This Boilerplate
+## The Problem
 
-1. **Copy** the entire boilerplate into your project root (or clone it as your starting point).
-2. **Fill in the memory bank files** in `memory-bank/` — start with `projectbrief.md`, then the others. Each file has placeholder sections guiding you on what to write.
-3. **That's it.** The rules and `AGENTS.md` are already wired up. The agent will read them automatically.
+LLMs are stateless. Every new chat session starts with zero memory. As sessions grow long, the context window fills up and the agent "forgets" earlier decisions — leading to inconsistent code and constant re-explanation.
 
-When you start a new chat in Cursor, the agent will orient itself from the memory bank and log files before doing anything else.
+This boilerplate gives the agent an **external memory system** in plain markdown files, combined with **rules** that tell it how to use that memory.
+
+---
+
+## Quick Start
+
+```bash
+# 1. Copy the boilerplate into your project root
+cp -r cursor-boilerplate/* your-project/
+
+# 2. Run the setup script
+cd your-project
+./init.sh
+
+# 3. Fill in memory-bank/techContext.md with your stack
+
+# 4. Delete or adapt the example rules
+rm .cursor/rules/300-*-example.mdc   # or edit them for your stack
+
+# 5. Open Cursor and start building
+```
+
+The `init.sh` script walks you through setting the project name, vision, and audience — replacing all the placeholders automatically.
 
 ---
 
@@ -28,127 +40,110 @@ When you start a new chat in Cursor, the agent will orient itself from the memor
 
 ```
 your-project/
+├── AGENTS.md                           # Lean agent entry point (~20 lines)
+├── init.sh                             # Interactive setup script
+├── CHANGELOG.md                        # Boilerplate version history
 │
-├── AGENTS.md                    # Primary agent instructions — read first every session
+├── memory-bank/                        # Persistent project memory
+│   ├── projectbrief.md                 # Vision, objectives, scope (required)
+│   ├── techContext.md                  # Tech stack and constraints (required)
+│   ├── activeContext.md                # Current work state, updated often (required)
+│   ├── productContext.md               # Business logic and user flows (optional)
+│   ├── systemPatterns.md               # Architecture patterns (optional)
+│   └── progress.md                     # Roadmap and completion tracking (optional)
 │
-├── memory-bank/                 # Persistent project memory
-│   ├── projectbrief.md          # Vision, objectives, scope (rarely changes)
-│   ├── productContext.md        # Business logic, user flows, domain rules
-│   ├── techContext.md           # Tech stack, constraints, env vars
-│   ├── systemPatterns.md        # Architecture patterns, naming conventions
-│   ├── activeContext.md         # Current work focus and next steps (updated often)
-│   └── progress.md              # What's done, what remains, known debt
+├── logs/                               # Append-only development history
+│   ├── LOG_INDEX.md                    # Index of all log files
+│   └── LOG_001.md                      # Detail log, rotated at ~5000 chars
 │
-├── logs/                        # Append-only development log
-│   ├── LOG_INDEX.md             # Index: one row per log file, links to detail files
-│   ├── LOG_001.md               # First log file — grows until ~5000 chars, then new file
-│   └── LOG_002.md ...           # Subsequent log files, created automatically as needed
+├── examples/                           # Filled-in example for reference
+│   └── todo-app/                       # What good memory bank files look like
+│       ├── projectbrief.md
+│       ├── techContext.md
+│       └── activeContext.md
 │
 └── .cursor/
     └── rules/
-        ├── creating-rules.mdc           # How to write good rules
-        ├── 000-rule-management.mdc      # Naming, frontmatter, governance for new rules
-        ├── 001-self-improvement.mdc     # When/how the agent proposes new rules
-        ├── 100-workflow-loop.mdc        # Plan-then-Act workflow enforcement
-        └── 200-context-preservation.mdc # Log update triggers, session-start protocol
+        ├── 000-rule-management.mdc     # How to create new rules
+        ├── 001-self-improvement.mdc    # When the agent proposes new rules
+        ├── 100-workflow-loop.mdc       # Plan/Act workflow (large tasks only)
+        ├── 200-context-preservation.mdc # Logging major changes
+        ├── creating-rules.mdc          # Meta-guidelines for rule authoring
+        ├── 300-typescript-example.mdc  # EXAMPLE — delete or adapt
+        └── 300-python-example.mdc      # EXAMPLE — delete or adapt
 ```
 
 ---
 
-## The Workflow Loop
+## How It Works
 
-Every non-trivial task follows this loop:
+### Memory Bank (3 required + 3 optional files)
+
+The agent reads these before planning and updates them after acting.
+
+| File | Required | Update Frequency | Purpose |
+|------|----------|-----------------|---------|
+| `projectbrief.md` | Yes | Rarely | Project vision and scope |
+| `techContext.md` | Yes | When stack changes | Technology and constraints |
+| `activeContext.md` | Yes | Every session | Current state and next steps |
+| `productContext.md` | No | When product changes | Business logic and user flows |
+| `systemPatterns.md` | No | As patterns emerge | Architecture conventions |
+| `progress.md` | No | Per task | Roadmap tracking |
+
+### Workflow
+
+The agent uses Plan/Act **only for large tasks** (3+ files or architectural decisions). Small changes proceed directly.
 
 ```
-Human makes request
-       |
-       v
-  [PLAN MODE]
-  Agent reads memory bank
-  Agent drafts step-by-step plan
-  Agent presents plan → no code written yet
-       |
-       v
-  Human approves
-       |
-       v
-  [ACT MODE]
-  Agent executes plan
-  Agent updates activeContext.md + progress.md
-  Agent appends to active log file
-       |
-       v
-  Back to waiting for next request
+Request comes in
+      │
+      ├─ Small task (1-2 files) ──→ Just do it
+      │
+      └─ Large task (3+ files) ──→ PLAN → human approves → ACT
+                                                              │
+                                                              └─ Update activeContext.md
 ```
 
-The agent is **blocked from writing code** until the human approves the plan. This prevents wasted effort from misunderstood requirements.
+### Rules
 
----
+Four core rules govern behavior. They're loaded automatically via `alwaysApply: true`:
 
-## The Memory Bank
+| Rule | What it does |
+|------|-------------|
+| `000-rule-management` | Naming, structure, and governance for new rules |
+| `001-self-improvement` | Proposes new rules when it sees repeated patterns (3+ times) |
+| `100-workflow-loop` | Plan/Act for large tasks; small tasks proceed freely |
+| `200-context-preservation` | Log major changes to activeContext.md and logs/ |
 
-Six markdown files that act as the agent's long-term memory. The agent reads these before planning, and updates them after acting.
+### Development Log
 
-| File | Update Frequency | Purpose |
-|------|-----------------|---------|
-| `projectbrief.md` | Rarely | Immutable project constitution |
-| `productContext.md` | Low | Business logic and UX goals |
-| `techContext.md` | Low-Medium | Stack and constraints |
-| `systemPatterns.md` | Medium | Architecture and conventions |
-| `activeContext.md` | Every session | Current state and next steps |
-| `progress.md` | Per task | Roadmap and completion status |
+The `logs/` directory is an append-only history of significant changes.
 
----
+- `LOG_INDEX.md` — small index: one row per log file, always scannable.
+- `LOG_001.md`, `LOG_002.md`, ... — detail files with freeform entries. When a file hits ~5000 chars, the agent creates the next one and updates the index. Old files are never modified.
 
-## The Log System
+The agent writes a log entry after major changes — not after every edit. Entries are freeform (date + title + what happened), not a rigid template.
 
-The `logs/` directory is an **append-only, growing history** of everything the agent does.
+### Example Tech Rules
 
-- `LOG_INDEX.md` — a small index file: date, one-sentence summary, link per log file. Always scannable.
-- `LOG_001.md`, `LOG_002.md`, ... — detail files. Each entry records files changed, commands run, errors, and next steps. When a file fills up (~5000 chars), the agent creates the next numbered file and adds a row to the index. **Old files are never modified.**
-
-When you start a fresh chat, the agent reads the index to find the latest log, reads that log file, then reads `activeContext.md`. It knows exactly where things stand.
-
----
-
-## The Rules
-
-Four core rules govern agent behavior:
-
-| Rule | Purpose |
-|------|---------|
-| `000-rule-management.mdc` | How to create valid new rules — naming, frontmatter, content |
-| `001-self-improvement.mdc` | When to propose new rules based on observed patterns |
-| `100-workflow-loop.mdc` | The Plan/Act loop — no code without an approved plan |
-| `200-context-preservation.mdc` | When to write to logs, how to handle log rotation, session-start steps |
-
----
-
-## Self-Improvement
-
-The boilerplate is designed to grow with your project. The `001-self-improvement.mdc` rule instructs the agent to:
-
-- Watch for repeated patterns that aren't yet documented
-- Propose new rules when it notices the same correction being made twice
-- Propose usage rules when new dependencies are added
-
-All proposals require human approval. The agent never writes rules autonomously.
+The boilerplate ships two example tech rules (`300-typescript-example.mdc`, `300-python-example.mdc`) showing what a project-specific rule looks like. These are **not loaded by default** — they use `alwaysApply: false` with file globs. Delete them or adapt them for your stack.
 
 ---
 
 ## Customization
 
-- **Add tech-stack rules**: Once you know your stack, add numbered rules like `300-typescript.mdc`, `301-react.mdc`, `400-api-patterns.mdc`. Use `000-rule-management.mdc` as a guide.
-- **Adjust log rotation threshold**: Change the ~5000 char threshold in `200-context-preservation.mdc` to suit your preference.
-- **Skip the 6-file memory bank**: For small/solo projects, you can reduce to just `activeContext.md` and `progress.md`. Update `AGENTS.md` to reflect what you're using.
+- **Add your own tech rules**: Create `300-your-stack.mdc` files following the examples. Use `globs` to scope them to relevant file types.
+- **Skip optional memory files**: For small projects, just use the 3 required files. The agent will work fine.
+- **Adjust the plan threshold**: Edit `100-workflow-loop.mdc` if you want more or less planning ceremony.
 
 ---
 
-## Starting a New Project with This Boilerplate
+## Examples
 
-1. Copy this folder structure into your project root.
-2. Open `memory-bank/projectbrief.md` — fill in your project name, vision, objectives, and scope.
-3. Fill in `memory-bank/techContext.md` with your tech stack.
-4. Fill in `memory-bank/systemPatterns.md` as you establish conventions.
-5. Leave `memory-bank/activeContext.md` and `memory-bank/progress.md` — the agent updates these.
-6. Start a Cursor chat and begin working. The agent will orient from your files.
+The `examples/todo-app/` directory contains filled-in memory bank files for a fictional "TaskFlow" todo app. Use it as a reference when filling in your own files.
+
+---
+
+## Versioning
+
+See `CHANGELOG.md` for version history. When the boilerplate improves, you can diff against your copy to see what changed.

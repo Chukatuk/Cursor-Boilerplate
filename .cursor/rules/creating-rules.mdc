@@ -1,7 +1,7 @@
 ---
 description: Best practices for creating and editing Cursor rules in this project
 globs: .cursor/rules/**/*
-alwaysApply: true
+alwaysApply: false
 ---
 
 # Creating Rules — Meta-Guidelines
@@ -11,17 +11,17 @@ When adding or editing rules under `.cursor/rules/`, follow these practices so r
 ## Do
 
 - **Keep each rule under 500 lines.** If it grows, split into multiple, composable rules (e.g. `api-conventions.mdc`, `api-errors.mdc`).
-- **Be focused and scoped.** One main concern per rule; avoid “and also everything about X.”
-- **Be actionable.** Write like clear internal docs: what to do, when, and why. Prefer concrete “do this / don’t do that” over vague advice.
-- **Use examples or references.** Prefer short snippets or “see `path/to/file`” over long pastes. Reference files instead of copying their contents so rules don’t go stale as code changes.
+- **Be focused and scoped.** One main concern per rule; avoid "and also everything about X."
+- **Be actionable.** Write like clear internal docs: what to do, when, and why. Prefer concrete "do this / don't do that" over vague advice.
+- **Use examples or references.** Prefer short snippets or "see `path/to/file`" over long pastes. Reference files instead of copying their contents so rules don't go stale as code changes.
 - **Reuse rules.** When the same guidance would be repeated in chat, add or point to a rule instead of re-explaining.
 
-## Don’t
+## Don't
 
-- **Don’t copy full style guides.** Rely on the linter and formatter for style; rules should cover project-specific choices, not generic conventions.
-- **Don’t document every command.** The agent already knows common tools (npm, git, pytest, etc.). Only document project-specific scripts, env setup, or non-obvious workflows.
-- **Don’t add rare edge cases.** Keep rules focused on patterns you use often; skip one-off or rarely applicable instructions.
-- **Don’t duplicate the codebase.** Point to canonical examples (file + area) instead of copying code into the rule.
+- **Don't copy full style guides.** Rely on the linter and formatter for style; rules should cover project-specific choices, not generic conventions.
+- **Don't document every command.** The agent already knows common tools (npm, git, pytest, etc.). Only document project-specific scripts, env setup, or non-obvious workflows.
+- **Don't add rare edge cases.** Keep rules focused on patterns you use often; skip one-off or rarely applicable instructions.
+- **Don't duplicate the codebase.** Point to canonical examples (file + area) instead of copying code into the rule.
 
 ## Rule file format
 

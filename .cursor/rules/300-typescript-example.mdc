@@ -1,0 +1,48 @@
+---
+description: "EXAMPLE RULE — TypeScript conventions for API routes. Delete or adapt this for your project."
+globs: "**/*.ts"
+alwaysApply: false
+---
+
+# TypeScript Conventions (EXAMPLE)
+
+> **This is an example rule shipped with the boilerplate.** Delete it or replace it with your project's actual conventions. It exists to show what a good tech rule looks like.
+
+## Error handling
+
+- Async functions use try/catch and return a typed result, never throw to the caller.
+- User-facing errors map to error codes defined in a central `errors.ts` file.
+
+```typescript
+// DO
+async function getUser(id: string): Promise<Result<User>> {
+  try {
+    const user = await db.user.findUnique({ where: { id } });
+    if (!user) return { ok: false, error: "USER_NOT_FOUND" };
+    return { ok: true, data: user };
+  } catch (e) {
+    return { ok: false, error: "INTERNAL_ERROR" };
+  }
+}
+
+// DON'T — throwing leaves error handling to the caller
+async function getUser(id: string): Promise<User> {
+  const user = await db.user.findUnique({ where: { id } });
+  if (!user) throw new Error("not found");
+  return user;
+}
+```
+
+## Naming
+
+| Thing | Convention | Example |
+|-------|-----------|---------|
+| Files | kebab-case | `user-profile.ts` |
+| Functions | camelCase | `getUserById()` |
+| Types/Interfaces | PascalCase | `UserProfile` |
+| Constants | SCREAMING_SNAKE | `MAX_RETRY_COUNT` |
+
+## Anti-patterns
+
+- Never use `any`. Use `unknown` with a type guard instead.
+- Never use `enum`. Use `as const` objects or union types.

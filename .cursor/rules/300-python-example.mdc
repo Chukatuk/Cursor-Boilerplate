@@ -1,0 +1,56 @@
+---
+description: "EXAMPLE RULE — Python conventions for a FastAPI project. Delete or adapt this for your project."
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Python Conventions (EXAMPLE)
+
+> **This is an example rule shipped with the boilerplate.** Delete it or replace it with your project's actual conventions. It exists to show what a good tech rule looks like.
+
+## Project structure
+
+```
+src/
+├── api/           # Route handlers
+├── services/      # Business logic
+├── models/        # Pydantic models and DB schemas
+├── core/          # Config, dependencies, middleware
+└── utils/         # Shared helpers
+```
+
+## Error handling
+
+- Route handlers catch exceptions and return structured error responses.
+- Business logic in `services/` returns result objects, never raises to the route handler.
+
+```python
+# DO — service returns a result
+def get_user(user_id: str) -> dict:
+    user = db.get(user_id)
+    if not user:
+        return {"ok": False, "error": "USER_NOT_FOUND"}
+    return {"ok": True, "data": user}
+
+# DON'T — raising forces the caller to know about your exceptions
+def get_user(user_id: str) -> User:
+    user = db.get(user_id)
+    if not user:
+        raise UserNotFoundError(user_id)
+    return user
+```
+
+## Naming
+
+| Thing | Convention | Example |
+|-------|-----------|---------|
+| Files | snake_case | `user_profile.py` |
+| Functions | snake_case | `get_user_by_id()` |
+| Classes | PascalCase | `UserProfile` |
+| Constants | SCREAMING_SNAKE | `MAX_RETRY_COUNT` |
+
+## Anti-patterns
+
+- Never use `*` imports.
+- Never use mutable default arguments (`def f(items=[])`).
+- Never silence exceptions with bare `except:` — always catch specific types.

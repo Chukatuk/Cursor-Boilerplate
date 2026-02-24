@@ -1,59 +1,52 @@
 ---
-description: Protects against context window degradation by maintaining an append-only log system and mandating session-start orientation. Always active.
+description: Ensures important changes are logged to disk so fresh sessions can pick up where the last one left off. Always active.
 alwaysApply: true
 ---
 
 # Context Preservation
 
-LLMs lose context as sessions grow. This rule ensures critical project state is always written to disk so a fresh session can pick up exactly where the last one left off.
+LLMs lose context across sessions. This rule ensures major changes are recorded so a new session can resume without re-explanation.
 
-## Log system structure
+## Two places to log
 
-All logs live in the `logs/` directory:
+1. **`memory-bank/activeContext.md`** — the AI's working memory. Update the "Recently Completed" and "Notes / Decisions Made" sections after significant work.
+2. **`logs/LOG_*.md`** — detailed, append-only history. One entry per major change with enough context for a future session to understand what happened.
 
-- `logs/LOG_INDEX.md` — the index. One row per log file: date, one-sentence summary, link to detail file.
-- `logs/LOG_001.md`, `logs/LOG_002.md`, ... — numbered detail log files. Append-only. Never edit old files.
+## When to log
 
-## When to write to the log
+Log after:
+- Completing a significant feature or fix
+- Making architectural decisions
+- Encountering and resolving a non-trivial error
+- Finishing a planning or implementation session
 
-Append a log entry to the current active log file after:
-- Any significant file creation, modification, or deletion
-- Any terminal command that produces a meaningful result
-- Any error encountered and how it was resolved
-- Completing a plan phase or act phase
+Not every file edit needs a log entry. Use judgment — if a future session would need to know about it, log it.
 
-A log entry looks like:
+## Log entry format
+
+Keep entries short and useful. No rigid template — just include what matters:
 
 ```
-## [YYYY-MM-DD HH:MM] <short title>
-**Files changed**: list of files
-**Commands run**: list of commands (if any)
-**Outcome**: what happened
-**Errors**: any errors and resolutions (if any)
-**Next**: immediate next step
+## [YYYY-MM-DD] Short title
+
+What was done, why, and any important context. Mention files changed if relevant.
 ```
 
-## Log rotation — creating a new file
+## Log rotation
 
-When the current active log file exceeds approximately 5000 characters:
-1. Create the next numbered file: if `LOG_001.md` is full, create `LOG_002.md`.
-2. Add a new row to `LOG_INDEX.md`:
-   ```
-   | LOG_002.md | YYYY-MM-DD | One-sentence summary of what this log covers | [link](logs/LOG_002.md) |
-   ```
-3. Begin appending new entries to the new file.
-4. **Never modify or summarize old log files.** They are permanent history.
+When the active log file exceeds ~5000 characters:
+1. Create the next numbered file (e.g., `LOG_002.md`).
+2. Add a row to `logs/LOG_INDEX.md`.
+3. Never modify old log files — they are permanent history.
 
-## Session start — orientation protocol
+## Session start
 
-At the start of every new chat session, before doing anything else:
-1. Read `logs/LOG_INDEX.md` to identify the most recent log file.
-2. Read the most recent log file to understand the last known state.
-3. Read `memory-bank/activeContext.md` for current focus, blockers, and next steps.
-4. Confirm orientation to the human: briefly state what you understand the current state to be, then ask how to proceed.
+At the start of every new chat session:
+1. Read `memory-bank/activeContext.md` to understand current state.
+2. Read `logs/LOG_INDEX.md` and the most recent log file for detailed history.
+3. If files contain only placeholders, ask the user to fill in the memory bank.
+4. State your understanding of the current state and ask how to proceed.
 
-## Tool call checkpoint
+## Long sessions
 
-Every ~25 tool calls within a session, pause and:
-1. Append a checkpoint entry to the active log file documenting current progress.
-2. Notify the human: "Checkpoint: I've made significant progress. Here's the current state: [summary]. If the session is getting long, now is a good time to start a fresh chat."
+If a session has been running for a while and the context window may be getting full, proactively suggest starting a fresh chat. Update `activeContext.md` and append a log entry before doing so.
