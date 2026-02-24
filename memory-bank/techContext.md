@@ -17,6 +17,10 @@
 | Auth | | | |
 | Hosting | | | |
 
+## MCP Servers
+
+This project uses `.cursor/mcp.json` with recommended MCPs (Context7, Git, Filesystem, Sequential thinking). Add or remove entries there; restart Cursor after changes.
+
 ## Local Development Setup
 
 ### Prerequisites

@@ -63,6 +63,7 @@ your-project/
 │       └── activeContext.md
 │
 └── .cursor/
+    ├── mcp.json                        # Recommended MCP servers (language-agnostic)
     └── rules/
         ├── 000-rule-management.mdc     # How to create new rules
         ├── 001-self-improvement.mdc    # When the agent proposes new rules
@@ -123,6 +124,23 @@ The `logs/` directory is an append-only history of significant changes.
 - `LOG_001.md`, `LOG_002.md`, ... — detail files with freeform entries. When a file hits ~5000 chars, the agent creates the next one and updates the index. Old files are never modified.
 
 The agent writes a log entry after major changes — not after every edit. Entries are freeform (date + title + what happened), not a rigid template.
+
+### MCP Servers
+
+The boilerplate ships `.cursor/mcp.json` with recommended MCP servers that work for any language:
+
+| Server | Purpose | Prerequisite |
+|--------|---------|--------------|
+| **Context7** | Up-to-date docs for any library (no training-data guesswork) | None (remote) |
+| **Git** | Status, diff, commit, history | [uv](https://docs.astral.sh/uv/) or Python + `mcp-server-git` |
+| **Filesystem** | Read/write files, list dirs | Node.js (for `npx`) |
+| **Sequential thinking** | Structured step-by-step reasoning | Node.js (for `npx`) |
+
+- **Context7** uses the remote server; no API key needed (optional key for higher limits).
+- If you don't use **uv** or Python, remove the `git` entry from `.cursor/mcp.json` to avoid startup errors.
+- For **web/frontend** work, add a Browser MCP (e.g. Playwright or cursor-ide-browser) in Cursor Settings → MCP.
+
+Restart Cursor after changing `mcp.json` for changes to apply.
 
 ### Example Tech Rules
 
