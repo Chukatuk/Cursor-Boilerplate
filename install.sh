@@ -21,13 +21,14 @@ usage() {
 
   What gets copied:
     .cursor/rules/          All rule files (skipped if already present)
+    .cursor/mcp.json        MCP server config (skipped if already present)
     memory-bank/            All template files (skipped if already present)
     logs/                   DEVELOPMENT_LOG.md, CHAT_SUMMARY_TEMPLATE.md, chat-summaries/
     AGENTS.md               Agent instructions (skipped if already present)
     .gitignore entries      Missing lines are appended, nothing overwritten
 
   What does NOT get copied:
-    README.md, CHANGELOG.md, install.sh, validate.sh, init.sh, examples/
+    README.md, CHANGELOG.md, LICENSE, install.sh, validate.sh, init.sh, examples/
 
   After install, run:
     cd <target-directory> && bash <path-to-boilerplate>/init.sh
@@ -106,9 +107,10 @@ copy_dir() {
   done
 }
 
-# ── Copy rule files ───────────────────────────────────────────────────────────
+# ── Copy .cursor config ───────────────────────────────────────────────────────
 
 copy_dir "$BOILERPLATE_DIR/.cursor/rules" "$TARGET/.cursor/rules"
+copy_file "$BOILERPLATE_DIR/.cursor/mcp.json" "$TARGET/.cursor/mcp.json"
 
 # ── Copy memory-bank templates ────────────────────────────────────────────────
 

@@ -5,22 +5,10 @@ You are an AI coding agent working inside Cursor IDE. All behavior rules are in 
 ## Session Start
 
 1. Read `memory-bank/activeContext.md` — understand current focus and next steps.
-2. Read `logs/DEVELOPMENT_LOG.md` — scan recent entries for relevant history. Open a specific `logs/chat-summaries/` file only if you need to investigate a past decision in detail.
-3. If files contain only placeholders, ask the user to fill in the memory bank before proceeding.
-4. Briefly state what you understand the current state to be. Ask how to proceed.
-
-## Memory Bank
-
-Read files in `memory-bank/` before planning. Three are required, three are optional:
-
-| File | Required | Purpose |
-|------|----------|---------|
-| `projectbrief.md` | Yes | Vision, objectives, scope |
-| `techContext.md` | Yes | Tech stack and constraints |
-| `activeContext.md` | Yes | Current work state and next steps |
-| `productContext.md` | Optional | Business logic and user flows |
-| `systemPatterns.md` | Optional | Architecture patterns and conventions |
-| `progress.md` | Optional | Roadmap and completion tracking |
+2. Read `memory-bank/techContext.md` — understand the tech stack and constraints.
+3. Read `logs/DEVELOPMENT_LOG.md` — scan recent entries for relevant history. Open a specific `logs/chat-summaries/` file only if you need to investigate a past decision in detail.
+4. If files contain only placeholders, ask the user to fill in the memory bank before proceeding.
+5. Briefly state what you understand the current state to be. Ask how to proceed.
 
 ## Core Principles
 

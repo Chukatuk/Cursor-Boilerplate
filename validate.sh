@@ -94,6 +94,7 @@ echo ""
 # Required files
 check_file "AGENTS.md"
 check_file "README.md"
+check_file "LICENSE"
 check_file "init.sh"
 check_file "install.sh"
 check_file ".gitignore"
@@ -120,19 +121,23 @@ check_file "logs/CHAT_SUMMARY_TEMPLATE.md"
 
 # Rules
 check_file ".cursor/rules/000-rule-management.mdc"
+check_file ".cursor/rules/000-creating-rules.mdc"
 check_file ".cursor/rules/001-security.mdc"
 check_file ".cursor/rules/001-self-improvement.mdc"
 check_file ".cursor/rules/100-workflow-loop.mdc"
+check_file ".cursor/rules/100-quality.mdc"
 check_file ".cursor/rules/200-context-preservation.mdc"
-check_file ".cursor/rules/creating-rules.mdc"
+check_file ".cursor/rules/200-chat-summaries.mdc"
 
 # Rule frontmatter
 check_frontmatter ".cursor/rules/000-rule-management.mdc"
+check_frontmatter ".cursor/rules/000-creating-rules.mdc"
 check_frontmatter ".cursor/rules/001-security.mdc"
 check_frontmatter ".cursor/rules/001-self-improvement.mdc"
 check_frontmatter ".cursor/rules/100-workflow-loop.mdc"
+check_frontmatter ".cursor/rules/100-quality.mdc"
 check_frontmatter ".cursor/rules/200-context-preservation.mdc"
-check_frontmatter ".cursor/rules/creating-rules.mdc"
+check_frontmatter ".cursor/rules/200-chat-summaries.mdc"
 
 # No leftover sed backup files
 check_no_bak_files

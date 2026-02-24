@@ -1,6 +1,6 @@
 ---
-description: Defines when and how the AI proposes new rules or anti-patterns based on observed code patterns and human corrections. Always active.
-alwaysApply: true
+description: Defines when and how the AI proposes new rules or anti-patterns based on observed code patterns and repeated human corrections.
+alwaysApply: false
 ---
 
 # Self-Improvement Protocol

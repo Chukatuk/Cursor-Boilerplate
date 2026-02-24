@@ -1,0 +1,68 @@
+---
+description: Guidelines for creating chat summary files in logs/chat-summaries/ and updating the development log.
+alwaysApply: false
+---
+
+# Chat Summary Guidelines
+
+Reference this when creating a chat summary at the end of a work session.
+
+## When to create a summary
+
+Create one when you:
+
+- Implement a new feature (even small ones)
+- Fix a bug, especially a non-obvious one
+- Make an architectural decision
+- Refactor existing code
+- Resolve a problem that took multiple attempts
+- Make database or schema changes
+- Update configurations that affect system behavior
+
+Skip it for: trivial typo fixes, simple doc updates, quick questions without implementation.
+
+**Rule of thumb:** if it took more than 15 minutes, or future-you would want to know why, document it.
+
+## Naming convention
+
+Files go in `logs/chat-summaries/` with this format:
+
+```
+YYYYMMDD-brief-description.md
+```
+
+Examples:
+- `20260223-add-user-auth.md`
+- `20260222-fix-payment-race-condition.md`
+
+Rules: lowercase, kebab-case, start with date, 3–7 words describing what was done.
+
+## Template
+
+Copy the template from `logs/CHAT_SUMMARY_TEMPLATE.md` into a new file.
+
+Key sections to always fill in: Overview, Problem/Objective, Solution/Implementation, Files Changed.
+
+## Adding to the development log
+
+After creating a summary, add an entry at the top of `logs/DEVELOPMENT_LOG.md`:
+
+```
+## YYYY-MM-DD
+
+### [Category] Brief description
+→ [chat-summaries/YYYYMMDD-description.md](chat-summaries/YYYYMMDD-description.md)
+- Key point 1
+- Key point 2
+```
+
+## Categories
+
+Pick the most relevant: Feature, Bug Fix, Refactor, Performance, Security, Database, Configuration, Integration, UI/UX, Testing, Documentation, Investigation.
+
+## Best practices
+
+- **Be concise but complete** — "Added email resend with rate limiting (max 3/hour)" not "Fixed email stuff"
+- **Explain the why, not just the what** — "Used debouncing (300ms) on search input to reduce API calls" not "Added debouncing to search"
+- **Capture failed attempts** — they're as valuable as the solution
+- **Link related work** — connect to related past summaries

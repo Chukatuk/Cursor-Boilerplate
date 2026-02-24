@@ -2,6 +2,28 @@
 
 All notable changes to the Cursor Cognitive Boilerplate are documented here.
 
+## [3.1.0] — 2026-02-23
+
+Reduced context window overhead, added code quality rule, improved separation of concerns.
+
+### Added
+- **`100-quality.mdc`**: New always-on rule — run tests after logic changes, check lints after edits, don't leave broken imports.
+- **`200-chat-summaries.mdc`**: New on-demand rule — guidelines for creating chat summaries (naming, categories, format, best practices). Extracted from the old 179-line `CHAT_SUMMARY_TEMPLATE.md`.
+- **`LICENSE`**: MIT license file.
+- **`install.sh`** now copies `.cursor/mcp.json` to the target project (was previously missing).
+
+### Changed
+- **Reduced `alwaysApply: true` rules from 6 to 3.** Only `001-security`, `100-workflow-loop`, and `100-quality` are always-on. The rest activate on demand via description matching or globs:
+  - `000-rule-management` and `000-creating-rules`: glob-triggered on `.cursor/rules/**`
+  - `001-self-improvement`: description-triggered
+  - `200-context-preservation` and `200-chat-summaries`: description-triggered
+- **`creating-rules.mdc`** renamed to **`000-creating-rules.mdc`** to follow the numeric prefix convention.
+- **`AGENTS.md`** slimmed further — removed the duplicated memory bank table (already documented in the workflow rule and README). Added step to read `techContext.md` at session start.
+- **`logs/CHAT_SUMMARY_TEMPLATE.md`** reduced from 179 lines to ~75 — now contains only the copy-paste template. All guidelines moved to `200-chat-summaries.mdc`.
+
+### Removed
+- `creating-rules.mdc` (unnumbered) — replaced by `000-creating-rules.mdc`.
+
 ## [3.0.0] — 2026-02-23
 
 Major overhaul: safer scripts, richer history system, tighter rules.

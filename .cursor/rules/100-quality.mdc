@@ -1,0 +1,24 @@
+---
+description: Enforces code quality checks after changes — run tests, check linter errors, verify builds, and avoid broken imports.
+alwaysApply: true
+---
+
+# Code Quality
+
+## After making changes
+
+1. **Check for linter errors** in files you edited. Fix errors you introduced; don't fix pre-existing ones unless they block your work.
+2. **Run the test suite** if one exists and you changed logic. Mention the result. If tests fail because of your change, fix them before moving on.
+3. **Don't leave broken imports.** If you rename, move, or delete a file, update all files that import from it.
+
+## When writing new code
+
+- If the project has an existing test pattern (e.g., `*.test.ts`, `test_*.py`), follow it for new code when the user asks for tests or the change is non-trivial.
+- Match the existing code style in the file you're editing — indentation, quotes, semicolons, naming.
+- Don't introduce new dependencies without mentioning it to the user first.
+
+## What NOT to do
+
+- Don't run the full test suite for trivial changes (typo fixes, comment edits, config tweaks).
+- Don't write tests unless the user asks or the change is complex enough to warrant them.
+- Don't refactor unrelated code while fixing a bug — stay focused on the task.

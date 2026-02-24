@@ -1,6 +1,7 @@
 ---
-description: Governs how the AI creates, names, and structures new .mdc rule files. Always active.
-alwaysApply: true
+description: Governs how the AI creates, names, and structures new .mdc rule files in .cursor/rules/.
+globs: ".cursor/rules/**"
+alwaysApply: false
 ---
 
 # Rule Management

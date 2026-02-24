@@ -54,6 +54,7 @@ bash /path/to/cursor-boilerplate/init.sh
 ```
 your-project/
 ├── AGENTS.md                           # Agent entry point — session start instructions
+├── LICENSE                             # MIT license
 ├── init.sh                             # Interactive setup script (new projects)
 ├── install.sh                          # Install into existing project
 ├── validate.sh                         # Checks boilerplate is internally consistent
@@ -69,7 +70,7 @@ your-project/
 │
 ├── logs/
 │   ├── DEVELOPMENT_LOG.md              # Reverse-chronological index of all sessions
-│   ├── CHAT_SUMMARY_TEMPLATE.md        # Template + guidelines for chat summaries
+│   ├── CHAT_SUMMARY_TEMPLATE.md        # Copy-paste template for chat summaries
 │   └── chat-summaries/                 # One file per significant work session
 │       └── YYYYMMDD-description.md
 │
@@ -83,12 +84,14 @@ your-project/
 └── .cursor/
     ├── mcp.json                        # MCP servers (Context7 + sequential thinking)
     └── rules/
-        ├── 000-rule-management.mdc     # How to create new rules
-        ├── 001-security.mdc            # Never commit secrets or hardcode credentials
-        ├── 001-self-improvement.mdc    # When the agent proposes new rules
-        ├── 100-workflow-loop.mdc       # Plan/Act for large tasks
-        ├── 200-context-preservation.mdc # How and when to log changes
-        ├── creating-rules.mdc          # Meta-guidelines for rule authoring
+        ├── 000-rule-management.mdc     # How to create new rules (glob-triggered)
+        ├── 000-creating-rules.mdc      # Meta-guidelines for rule authoring (glob-triggered)
+        ├── 001-security.mdc            # Never commit secrets (always on)
+        ├── 001-self-improvement.mdc    # Proposes rules for repeated patterns (on demand)
+        ├── 100-workflow-loop.mdc       # Plan/Act for large tasks (always on)
+        ├── 100-quality.mdc             # Code quality — tests, lints, imports (always on)
+        ├── 200-context-preservation.mdc # When to update memory and logs (on demand)
+        ├── 200-chat-summaries.mdc      # How to write chat summaries (on demand)
         ├── 300-typescript-example.mdc  # EXAMPLE — delete or adapt
         └── 300-python-example.mdc      # EXAMPLE — delete or adapt
 ```
@@ -136,17 +139,23 @@ Request comes in
 
 ### Rules
 
-Five always-on rules govern behavior:
+Three always-on rules govern core behavior:
 
 | Rule | What it does |
 |------|-------------|
-| `000-rule-management` | Naming, structure, and governance for new rules |
 | `001-security` | Never commit secrets; always use environment variables |
-| `001-self-improvement` | Proposes new rules when it sees repeated patterns (3+ times) |
 | `100-workflow-loop` | Plan/Act for large tasks; small tasks proceed freely |
-| `200-context-preservation` | When and how to log changes to the chat-summaries system |
+| `100-quality` | Run tests and check lints after changes; don't leave broken imports |
 
-`creating-rules.mdc` is also always-on — it defines authoring standards for any new rule.
+Five more rules activate on demand (when their description or glob matches the current task):
+
+| Rule | Activates when | What it does |
+|------|---------------|-------------|
+| `000-rule-management` | Editing `.cursor/rules/` files | Naming, structure, governance for rules |
+| `000-creating-rules` | Editing `.cursor/rules/` files | Authoring best practices for rules |
+| `001-self-improvement` | Repeated patterns or corrections observed | Proposes new rules for recurring patterns |
+| `200-context-preservation` | Logging or summarizing work | When and how to update memory bank and logs |
+| `200-chat-summaries` | Creating a chat summary | Naming, categories, and format guidelines |
 
 ---
 
@@ -196,7 +205,7 @@ Add these to `.cursor/mcp.json` as needed:
 - **Add tech rules**: Create `300-your-stack.mdc` following the examples. Use `globs` to scope them to relevant file types.
 - **Skip optional memory files**: For small projects, just use the 3 required files.
 - **Adjust the plan threshold**: Edit `100-workflow-loop.mdc` if you want more or less planning ceremony.
-- **Add chat summary categories**: Edit `logs/CHAT_SUMMARY_TEMPLATE.md` to add project-specific categories.
+- **Add chat summary categories**: Edit `.cursor/rules/200-chat-summaries.mdc` to add project-specific categories.
 
 ---
 
@@ -211,6 +220,10 @@ The `examples/todo-app/` directory contains filled-in memory bank files and a sa
 Run `./validate.sh` to check that the boilerplate is internally consistent: all required files exist, scripts are executable, rule files have valid frontmatter, and no leftover `.bak` files.
 
 ---
+
+## License
+
+MIT — see [LICENSE](LICENSE).
 
 ## Versioning
 
