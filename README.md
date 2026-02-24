@@ -16,6 +16,8 @@ This boilerplate gives the agent an **external memory system** in plain markdown
 
 ## Quick Start
 
+### New project
+
 ```bash
 # 1. Copy the boilerplate into your project root
 cp -r cursor-boilerplate/* your-project/
@@ -32,7 +34,18 @@ rm .cursor/rules/300-*-example.mdc   # or edit them for your stack
 # 5. Open Cursor and start building
 ```
 
-The `init.sh` script walks you through setting the project name, vision, and audience — replacing all the placeholders automatically.
+### Install into an existing project
+
+```bash
+# Safely copies boilerplate files without overwriting anything that exists
+./install.sh /path/to/your/project
+
+# Then run init from the target project
+cd /path/to/your/project
+bash /path/to/cursor-boilerplate/init.sh
+```
+
+`install.sh` skips files that already exist, merges `.gitignore` entries, and never overwrites.
 
 ---
 
@@ -40,8 +53,10 @@ The `init.sh` script walks you through setting the project name, vision, and aud
 
 ```
 your-project/
-├── AGENTS.md                           # Lean agent entry point (~20 lines)
-├── init.sh                             # Interactive setup script
+├── AGENTS.md                           # Agent entry point — session start instructions
+├── init.sh                             # Interactive setup script (new projects)
+├── install.sh                          # Install into existing project
+├── validate.sh                         # Checks boilerplate is internally consistent
 ├── CHANGELOG.md                        # Boilerplate version history
 │
 ├── memory-bank/                        # Persistent project memory
@@ -52,23 +67,27 @@ your-project/
 │   ├── systemPatterns.md               # Architecture patterns (optional)
 │   └── progress.md                     # Roadmap and completion tracking (optional)
 │
-├── logs/                               # Append-only development history
-│   ├── LOG_INDEX.md                    # Index of all log files
-│   └── LOG_001.md                      # Detail log, rotated at ~5000 chars
+├── logs/
+│   ├── DEVELOPMENT_LOG.md              # Reverse-chronological index of all sessions
+│   ├── CHAT_SUMMARY_TEMPLATE.md        # Template + guidelines for chat summaries
+│   └── chat-summaries/                 # One file per significant work session
+│       └── YYYYMMDD-description.md
 │
-├── examples/                           # Filled-in example for reference
-│   └── todo-app/                       # What good memory bank files look like
+├── examples/                           # Filled-in examples for reference
+│   └── todo-app/
 │       ├── projectbrief.md
 │       ├── techContext.md
-│       └── activeContext.md
+│       ├── activeContext.md
+│       └── chat-summary-example.md
 │
 └── .cursor/
-    ├── mcp.json                        # Recommended MCP servers (language-agnostic)
+    ├── mcp.json                        # MCP servers (Context7 + sequential thinking)
     └── rules/
         ├── 000-rule-management.mdc     # How to create new rules
+        ├── 001-security.mdc            # Never commit secrets or hardcode credentials
         ├── 001-self-improvement.mdc    # When the agent proposes new rules
-        ├── 100-workflow-loop.mdc       # Plan/Act workflow (large tasks only)
-        ├── 200-context-preservation.mdc # Logging major changes
+        ├── 100-workflow-loop.mdc       # Plan/Act for large tasks
+        ├── 200-context-preservation.mdc # How and when to log changes
         ├── creating-rules.mdc          # Meta-guidelines for rule authoring
         ├── 300-typescript-example.mdc  # EXAMPLE — delete or adapt
         └── 300-python-example.mdc      # EXAMPLE — delete or adapt
@@ -91,6 +110,16 @@ The agent reads these before planning and updates them after acting.
 | `systemPatterns.md` | No | As patterns emerge | Architecture conventions |
 | `progress.md` | No | Per task | Roadmap tracking |
 
+### Development Log
+
+The `logs/` directory is the long-term history of your project. Two components:
+
+**`logs/DEVELOPMENT_LOG.md`** — a reverse-chronological index. Each entry is 2–3 bullet points and a link to a chat summary. The agent reads this at the start of every session to understand recent history quickly.
+
+**`logs/chat-summaries/YYYYMMDD-description.md`** — one file per significant work session. Created using the template in `logs/CHAT_SUMMARY_TEMPLATE.md`. Contains the full context: what was done, why, what was tried, what failed, what to do next.
+
+The agent only reads individual summary files when investigating a specific past decision — not at every session start.
+
 ### Workflow
 
 The agent uses Plan/Act **only for large tasks** (3+ files or architectural decisions). Small changes proceed directly.
@@ -102,66 +131,87 @@ Request comes in
       │
       └─ Large task (3+ files) ──→ PLAN → human approves → ACT
                                                               │
-                                                              └─ Update activeContext.md
+                                                              └─ Update activeContext.md + create chat summary
 ```
 
 ### Rules
 
-Four core rules govern behavior. They're loaded automatically via `alwaysApply: true`:
+Five always-on rules govern behavior:
 
 | Rule | What it does |
 |------|-------------|
 | `000-rule-management` | Naming, structure, and governance for new rules |
+| `001-security` | Never commit secrets; always use environment variables |
 | `001-self-improvement` | Proposes new rules when it sees repeated patterns (3+ times) |
 | `100-workflow-loop` | Plan/Act for large tasks; small tasks proceed freely |
-| `200-context-preservation` | Log major changes to activeContext.md and logs/ |
+| `200-context-preservation` | When and how to log changes to the chat-summaries system |
 
-### Development Log
+`creating-rules.mdc` is also always-on — it defines authoring standards for any new rule.
 
-The `logs/` directory is an append-only history of significant changes.
+---
 
-- `LOG_INDEX.md` — small index: one row per log file, always scannable.
-- `LOG_001.md`, `LOG_002.md`, ... — detail files with freeform entries. When a file hits ~5000 chars, the agent creates the next one and updates the index. Old files are never modified.
+## MCP Servers
 
-The agent writes a log entry after major changes — not after every edit. Entries are freeform (date + title + what happened), not a rigid template.
-
-### MCP Servers
-
-The boilerplate ships `.cursor/mcp.json` with recommended MCP servers that work for any language:
+The boilerplate ships `.cursor/mcp.json` with two servers that work out of the box:
 
 | Server | Purpose | Prerequisite |
 |--------|---------|--------------|
-| **Context7** | Up-to-date docs for any library (no training-data guesswork) | None (remote) |
-| **Git** | Status, diff, commit, history | [uv](https://docs.astral.sh/uv/) or Python + `mcp-server-git` |
-| **Filesystem** | Read/write files, list dirs | Node.js (for `npx`) |
-| **Sequential thinking** | Structured step-by-step reasoning | Node.js (for `npx`) |
+| **Context7** | Up-to-date docs for any library | None (remote) |
+| **Sequential thinking** | Structured step-by-step reasoning | Node.js |
 
-- **Context7** uses the remote server; no API key needed (optional key for higher limits).
-- If you don't use **uv** or Python, remove the `git` entry from `.cursor/mcp.json` to avoid startup errors.
-- For **web/frontend** work, add a Browser MCP (e.g. Playwright or cursor-ide-browser) in Cursor Settings → MCP.
+Restart Cursor after changing `mcp.json`.
 
-Restart Cursor after changing `mcp.json` for changes to apply.
+### Optional MCP Servers
 
-### Example Tech Rules
+Add these to `.cursor/mcp.json` as needed:
 
-The boilerplate ships two example tech rules (`300-typescript-example.mdc`, `300-python-example.mdc`) showing what a project-specific rule looks like. These are **not loaded by default** — they use `alwaysApply: false` with file globs. Delete them or adapt them for your stack.
+**Git** (requires [uv](https://docs.astral.sh/uv/) or Python):
+```json
+"git": {
+  "command": "uvx",
+  "args": ["mcp-server-git", "--repository", "."]
+}
+```
+
+**Filesystem** (requires Node.js):
+```json
+"filesystem": {
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]
+}
+```
+
+**Playwright browser** (for frontend/web testing):
+```json
+"playwright": {
+  "command": "npx",
+  "args": ["-y", "@playwright/mcp"]
+}
+```
 
 ---
 
 ## Customization
 
-- **Add your own tech rules**: Create `300-your-stack.mdc` files following the examples. Use `globs` to scope them to relevant file types.
-- **Skip optional memory files**: For small projects, just use the 3 required files. The agent will work fine.
+- **Add tech rules**: Create `300-your-stack.mdc` following the examples. Use `globs` to scope them to relevant file types.
+- **Skip optional memory files**: For small projects, just use the 3 required files.
 - **Adjust the plan threshold**: Edit `100-workflow-loop.mdc` if you want more or less planning ceremony.
+- **Add chat summary categories**: Edit `logs/CHAT_SUMMARY_TEMPLATE.md` to add project-specific categories.
 
 ---
 
 ## Examples
 
-The `examples/todo-app/` directory contains filled-in memory bank files for a fictional "TaskFlow" todo app. Use it as a reference when filling in your own files.
+The `examples/todo-app/` directory contains filled-in memory bank files and a sample chat summary for a fictional "TaskFlow" todo app. Use it as a reference when filling in your own files.
+
+---
+
+## Validation
+
+Run `./validate.sh` to check that the boilerplate is internally consistent: all required files exist, scripts are executable, rule files have valid frontmatter, and no leftover `.bak` files.
 
 ---
 
 ## Versioning
 
-See `CHANGELOG.md` for version history. When the boilerplate improves, you can diff against your copy to see what changed.
+See `CHANGELOG.md` for version history.

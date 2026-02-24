@@ -3,14 +3,6 @@
     "context7": {
       "url": "https://mcp.context7.com/mcp"
     },
-    "git": {
-      "command": "uvx",
-      "args": ["mcp-server-git", "--repository", "."]
-    },
-    "filesystem": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]
-    },
     "sequential-thinking": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]

@@ -8,22 +8,30 @@
 
 ## Problem Statement
 
-[DESCRIBE THE PROBLEM]
+<!-- What problem does this project solve? Who has this problem and how painful is it?
+     Write 2–4 sentences. The AI uses this to make decisions that align with user needs. -->
 
 ## How It Solves the Problem
 
-[DESCRIBE THE SOLUTION APPROACH]
+<!-- What is the core approach? Why is this solution better than the alternative?
+     Don't repeat the problem — focus on the solution angle. -->
 
 ## Key User Flows
 
-### Flow 1: [NAME]
-1. [STEP 1]
-2. [STEP 2]
-3. [STEP 3]
+<!-- Walk through the most important things a user does. Keep each flow to 3–6 steps.
+     Add as many flows as needed. -->
+
+### Flow: [Name]
+1. User does X
+2. System responds with Y
+3. User completes Z
 
 ## Business / Domain Rules
 
-- [RULE 1]
+<!-- Rules that constrain what the system can or cannot do — pricing logic, permissions,
+     data ownership, compliance requirements, etc. The AI must not violate these. -->
+- Rule 1
+- Rule 2
 
 ---
 

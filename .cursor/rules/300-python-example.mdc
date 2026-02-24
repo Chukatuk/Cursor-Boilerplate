@@ -21,23 +21,15 @@ src/
 
 ## Error handling
 
-- Route handlers catch exceptions and return structured error responses.
-- Business logic in `services/` returns result objects, never raises to the route handler.
+This project has service functions return result dicts rather than raising exceptions to route handlers. This is one valid approach — if your team prefers exceptions with middleware-level handling, remove this section and document your own pattern.
 
 ```python
-# DO — service returns a result
+# This project's approach: service returns a result dict, route handler checks it
 def get_user(user_id: str) -> dict:
     user = db.get(user_id)
     if not user:
         return {"ok": False, "error": "USER_NOT_FOUND"}
     return {"ok": True, "data": user}
-
-# DON'T — raising forces the caller to know about your exceptions
-def get_user(user_id: str) -> User:
-    user = db.get(user_id)
-    if not user:
-        raise UserNotFoundError(user_id)
-    return user
 ```
 
 ## Naming

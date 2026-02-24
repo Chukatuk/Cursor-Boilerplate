@@ -8,6 +8,8 @@
 
 ## Technology Stack
 
+<!-- Fill in each layer relevant to your project. Add or remove rows as needed. -->
+
 | Layer | Technology | Version | Notes |
 |-------|-----------|---------|-------|
 | Language | | | |
@@ -17,32 +19,34 @@
 | Auth | | | |
 | Hosting | | | |
 
-## MCP Servers
-
-This project uses `.cursor/mcp.json` with recommended MCPs (Context7, Git, Filesystem, Sequential thinking). Add or remove entries there; restart Cursor after changes.
-
 ## Local Development Setup
 
 ### Prerequisites
-- [TOOL + VERSION]
+<!-- List tools and versions needed to run this project locally. -->
+- Tool + minimum version
 
 ### Key commands
+<!-- The commands a developer runs daily. Keep this short and accurate. -->
 ```
-[start command]        # [what it does]
-[test command]         # [what it does]
-[build command]        # [what it does]
+start command        # what it does
+test command         # what it does
+build command        # what it does
 ```
 
 ## Technical Constraints
 
-<!-- Hard constraints the AI must never violate -->
-- [CONSTRAINT, e.g., "Must run on Node 18 — no Node 20+ APIs"]
-- [CONSTRAINT, e.g., "All secrets via environment variables, never hardcoded"]
+<!-- Hard rules the AI must never violate. Examples:
+     - "Must support Node 18 LTS — no Node 20+ APIs"
+     - "All secrets via environment variables, never hardcoded"
+     - "No external network calls in unit tests" -->
+- Constraint 1
+- Constraint 2
 
 ## Environment Variables
 
+<!-- List every env var the project needs. The AI uses this to know what's available. -->
 ```
-[VAR_NAME]       # [what it's for]
+VAR_NAME        # what it's for
 ```
 
 ---

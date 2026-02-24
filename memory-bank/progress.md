@@ -7,22 +7,30 @@
 
 ## Completed
 
-### [Feature/Area Name]
-- [x] [Completed item]
+<!-- What features or areas are done and stable? Group by theme if it helps. -->
+
+### [Feature / Area]
+- [x] Completed item
+- [x] Completed item
 
 ## In Progress
 
-- [ ] [Item] — [status or blocker]
+<!-- What is currently being built? Include any known blockers. -->
+- [ ] Item in progress — blocker or status note
 
 ## Remaining Work
 
-- [ ] [Item]
+<!-- What is planned but not started yet? Rough priority order. -->
+- [ ] Item
+- [ ] Item
 
 ## Known Issues / Technical Debt
 
+<!-- Things that work but are not right. Include severity so the AI can prioritize. -->
+
 | Issue | Severity | Notes |
 |-------|---------|-------|
-| [DESCRIPTION] | [High/Medium/Low] | [context] |
+| Description | High / Medium / Low | Context or workaround |
 
 ---
 

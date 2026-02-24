@@ -2,49 +2,120 @@
 set -euo pipefail
 
 # Cursor Cognitive Boilerplate — Quick Setup
-# Replaces placeholders in memory-bank files with your project info.
+# Replaces placeholders in memory-bank and log files with your project info.
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# ── Help ──────────────────────────────────────────────────────────────────────
+
+usage() {
+  cat <<EOF
+
+  Cursor Cognitive Boilerplate — Setup
+  =====================================
+
+  Usage: ./init.sh [--help]
+
+  Interactive setup that replaces placeholders in all memory-bank and log files
+  with your project name, vision, and audience.
+
+  Flags:
+    --help    Show this message and exit
+
+  Notes:
+    - Run this once, from the project root where memory-bank/ lives.
+    - Safe to re-run: exits early if placeholders have already been replaced.
+    - Does NOT modify any .cursor/rules/ files.
+
+EOF
+}
+
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  usage
+  exit 0
+fi
+
+# ── Portable in-place sed ─────────────────────────────────────────────────────
+# macOS sed requires an extension argument (-i ''), GNU sed uses -i without one.
+
+sed_inplace() {
+  local pattern="$1"
+  local file="$2"
+  if sed --version 2>/dev/null | grep -q GNU; then
+    sed -i "$pattern" "$file"
+  else
+    sed -i '' "$pattern" "$file"
+  fi
+}
+
+# ── Escape a string for use as a sed replacement ─────────────────────────────
+# Escapes &, \, and the delimiter / so user input can't break the sed command.
+
+escape_for_sed() {
+  printf '%s' "$1" | sed 's/[&/\]/\\&/g'
+}
+
+# ── Idempotency check ─────────────────────────────────────────────────────────
+
+if ! grep -q "\[PROJECT NAME\]" "$SCRIPT_DIR/memory-bank/projectbrief.md" 2>/dev/null; then
+  echo ""
+  echo "  It looks like init.sh has already been run (placeholders are gone)."
+  echo "  Edit memory-bank/ files directly if you need to update your project info."
+  echo ""
+  exit 0
+fi
+
+# ── Prompts ───────────────────────────────────────────────────────────────────
 
 echo ""
 echo "  Cursor Cognitive Boilerplate — Setup"
 echo "  ====================================="
 echo ""
 
-# Get project name
 read -rp "  Project name: " PROJECT_NAME
 if [ -z "$PROJECT_NAME" ]; then
   echo "  Error: project name is required."
   exit 1
 fi
 
-# Get core vision
 read -rp "  One-sentence description: " CORE_VISION
 if [ -z "$CORE_VISION" ]; then
-  CORE_VISION="[DESCRIBE THE CORE IDEA]"
+  CORE_VISION="A project built with the Cursor Cognitive Boilerplate."
 fi
 
-# Get target audience
 read -rp "  Target audience (who is this for?): " TARGET_AUDIENCE
 if [ -z "$TARGET_AUDIENCE" ]; then
-  TARGET_AUDIENCE="[WHO IS THIS FOR]"
+  TARGET_AUDIENCE="The development team"
 fi
 
 TODAY=$(date +%Y-%m-%d)
 
-# Replace placeholders in projectbrief.md
-sed -i.bak "s/\[PROJECT NAME\]/$PROJECT_NAME/g" memory-bank/projectbrief.md
-sed -i.bak "s/\[DESCRIBE THE CORE IDEA\]/$CORE_VISION/g" memory-bank/projectbrief.md
-sed -i.bak "s/\[WHO IS THIS FOR\]/$TARGET_AUDIENCE/g" memory-bank/projectbrief.md
+# Escape values for safe sed substitution
+SAFE_PROJECT_NAME="$(escape_for_sed "$PROJECT_NAME")"
+SAFE_CORE_VISION="$(escape_for_sed "$CORE_VISION")"
+SAFE_TARGET_AUDIENCE="$(escape_for_sed "$TARGET_AUDIENCE")"
+SAFE_TODAY="$(escape_for_sed "$TODAY")"
 
-# Set dates across all memory bank files
-for f in memory-bank/*.md; do
-  sed -i.bak "s/\[DATE\]/$TODAY/g" "$f"
+# ── Replace placeholders ──────────────────────────────────────────────────────
+
+# projectbrief.md — project name, vision, audience, and date
+sed_inplace "s/\[PROJECT NAME\]/$SAFE_PROJECT_NAME/g" "$SCRIPT_DIR/memory-bank/projectbrief.md"
+sed_inplace "s/\[DESCRIBE THE CORE IDEA\]/$SAFE_CORE_VISION/g" "$SCRIPT_DIR/memory-bank/projectbrief.md"
+sed_inplace "s/\[WHO IS THIS FOR\]/$SAFE_TARGET_AUDIENCE/g" "$SCRIPT_DIR/memory-bank/projectbrief.md"
+
+# All memory-bank files — replace [DATE]
+for f in "$SCRIPT_DIR"/memory-bank/*.md; do
+  sed_inplace "s/\[DATE\]/$SAFE_TODAY/g" "$f"
 done
 
-# Clean up sed backup files
-rm -f memory-bank/*.md.bak
+# Log files — replace [DATE]
+for f in "$SCRIPT_DIR"/logs/DEVELOPMENT_LOG.md; do
+  [ -f "$f" ] && sed_inplace "s/\[DATE\]/$SAFE_TODAY/g" "$f"
+done
 
-# Reset activeContext to show project just started
-cat > memory-bank/activeContext.md << ACTIVE
+# ── Reset activeContext to a clean project-start state ────────────────────────
+
+cat > "$SCRIPT_DIR/memory-bank/activeContext.md" << ACTIVE
 # Active Context *(required)*
 
 > The AI's working memory. Reflects the current state of work.
@@ -55,12 +126,12 @@ cat > memory-bank/activeContext.md << ACTIVE
 
 ## Current Focus
 
-Project just initialized. Fill in remaining memory bank files and start building.
+Project just initialized. Fill in the remaining memory bank files and start building.
 
 ## Work in Progress
 
-- [ ] Fill in techContext.md with the technology stack
-- [ ] (Optional) Fill in systemPatterns.md, productContext.md, progress.md
+- [ ] Fill in \`memory-bank/techContext.md\` with the technology stack
+- [ ] (Optional) Fill in \`memory-bank/systemPatterns.md\`, \`memory-bank/productContext.md\`, \`memory-bank/progress.md\`
 
 ## Recently Completed
 
@@ -68,8 +139,8 @@ Project just initialized. Fill in remaining memory bank files and start building
 
 ## Immediate Next Steps
 
-1. Fill in memory-bank/techContext.md with your tech stack
-2. Delete example rules in .cursor/rules/300-*-example.mdc (or adapt them)
+1. Fill in \`memory-bank/techContext.md\` with your tech stack
+2. Delete or adapt the example rules in \`.cursor/rules/300-*-example.mdc\`
 3. Start building
 
 ## Notes / Decisions Made
@@ -81,11 +152,13 @@ Project just initialized. Fill in remaining memory bank files and start building
 *Last updated: $TODAY*
 ACTIVE
 
+# ── Done ──────────────────────────────────────────────────────────────────────
+
 echo ""
 echo "  Done! Files updated:"
 echo "    - memory-bank/projectbrief.md  (name, vision, audience filled in)"
 echo "    - memory-bank/activeContext.md  (reset for fresh start)"
-echo "    - All dates set to $TODAY"
+echo "    - All [DATE] placeholders set to $TODAY"
 echo ""
 echo "  Next steps:"
 echo "    1. Fill in memory-bank/techContext.md with your tech stack"

@@ -10,11 +10,10 @@ alwaysApply: false
 
 ## Error handling
 
-- Async functions use try/catch and return a typed result, never throw to the caller.
-- User-facing errors map to error codes defined in a central `errors.ts` file.
+This project uses result objects instead of throwing exceptions in service functions. This is one valid approach — if your team prefers exceptions, remove this section and document your own pattern.
 
 ```typescript
-// DO
+// This project's approach: return a typed result, never throw to the caller
 async function getUser(id: string): Promise<Result<User>> {
   try {
     const user = await db.user.findUnique({ where: { id } });
@@ -23,13 +22,6 @@ async function getUser(id: string): Promise<Result<User>> {
   } catch (e) {
     return { ok: false, error: "INTERNAL_ERROR" };
   }
-}
-
-// DON'T — throwing leaves error handling to the caller
-async function getUser(id: string): Promise<User> {
-  const user = await db.user.findUnique({ where: { id } });
-  if (!user) throw new Error("not found");
-  return user;
 }
 ```
 

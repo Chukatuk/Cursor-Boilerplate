@@ -1,0 +1,40 @@
+---
+description: Prevents the AI from committing secrets, hardcoding credentials, or exposing sensitive data. Always active.
+alwaysApply: true
+---
+
+# Security
+
+## Never commit secrets
+
+If the user asks to commit, stage, or add any of the following, warn them and refuse:
+
+- `.env` or `.env.*` files
+- `*.pem`, `*.key`, `*.p12`, `*.pfx` files
+- Any file named `secrets`, `credentials`, or `private`
+- Files that visibly contain API keys, tokens, passwords, or connection strings
+
+Say: "This file may contain secrets — committing it could expose credentials. Add it to `.gitignore` instead."
+
+## Never hardcode secrets in source code
+
+When writing code that needs an API key, token, password, or connection string:
+
+- Always read from an environment variable
+- Never paste or invent a literal value
+- If the variable doesn't exist in `techContext.md`, add it to the Environment Variables section
+
+```typescript
+// DO
+const apiKey = process.env.STRIPE_SECRET_KEY;
+
+// DON'T
+const apiKey = "sk_live_abc123...";
+```
+
+## When creating new integrations
+
+1. Decide on the environment variable name (e.g., `OPENAI_API_KEY`)
+2. Add it to `memory-bank/techContext.md` under Environment Variables
+3. Add it to `.gitignore` if a local config file is needed
+4. Document it in `.env.example` if the project uses one

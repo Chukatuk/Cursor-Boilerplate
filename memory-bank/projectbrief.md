@@ -11,31 +11,36 @@
 
 ## Core Vision
 
-<!-- One or two sentences: what does this project fundamentally do or enable? -->
+<!-- Describe your project in 1–2 sentences: what does it do, and what makes it worth building? -->
 [DESCRIBE THE CORE IDEA]
 
 ## Target Audience
 
+<!-- Who uses this? Be specific: "internal ops team", "indie developers", "small business owners". -->
 [WHO IS THIS FOR]
 
 ## Primary Objectives
 
-- [ ] [OBJECTIVE 1]
-- [ ] [OBJECTIVE 2]
-- [ ] [OBJECTIVE 3]
+<!-- List 2–5 concrete goals. What does success look like? -->
+- [ ] First objective
+- [ ] Second objective
+- [ ] Third objective
 
 ## Scope
 
 ### In scope
-- [IN SCOPE ITEM]
+<!-- What is this project responsible for? -->
+- Core feature area
 
 ### Out of scope
-- [OUT OF SCOPE ITEM]
+<!-- What are you explicitly NOT building? This prevents scope creep. -->
+- Things deferred to later
 
 ## Success Criteria
 
-- [SUCCESS CRITERION 1]
-- [SUCCESS CRITERION 2]
+<!-- How will you know this project succeeded? Measurable or observable outcomes. -->
+- Criterion 1
+- Criterion 2
 
 ---
 

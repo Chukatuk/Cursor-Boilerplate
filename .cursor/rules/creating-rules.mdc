@@ -1,7 +1,6 @@
 ---
-description: Best practices for creating and editing Cursor rules in this project
-globs: .cursor/rules/**/*
-alwaysApply: false
+description: Best practices for creating and editing Cursor rules in this project. Always active.
+alwaysApply: true
 ---
 
 # Creating Rules — Meta-Guidelines

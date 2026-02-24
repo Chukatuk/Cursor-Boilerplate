@@ -1,5 +1,5 @@
 ---
-description: Ensures important changes are logged to disk so fresh sessions can pick up where the last one left off. Always active.
+description: Ensures important changes are logged so fresh sessions can pick up where the last one left off. Always active.
 alwaysApply: true
 ---
 
@@ -7,46 +7,40 @@ alwaysApply: true
 
 LLMs lose context across sessions. This rule ensures major changes are recorded so a new session can resume without re-explanation.
 
-## Two places to log
+## Two places to update after significant work
 
-1. **`memory-bank/activeContext.md`** — the AI's working memory. Update the "Recently Completed" and "Notes / Decisions Made" sections after significant work.
-2. **`logs/LOG_*.md`** — detailed, append-only history. One entry per major change with enough context for a future session to understand what happened.
+1. **`memory-bank/activeContext.md`** — short-term memory. Update "Current Focus", "Recently Completed", and "Notes / Decisions Made" after every work session.
+2. **`logs/chat-summaries/`** — long-term history. Create one file per significant session using the template in `logs/CHAT_SUMMARY_TEMPLATE.md`. Then add a one-line entry linking to it at the top of `logs/DEVELOPMENT_LOG.md`.
 
 ## When to log
 
-Log after:
+Create a chat summary after:
 - Completing a significant feature or fix
-- Making architectural decisions
+- Making an architectural decision
 - Encountering and resolving a non-trivial error
-- Finishing a planning or implementation session
+- Finishing any session where future-you would want to know what happened and why
 
-Not every file edit needs a log entry. Use judgment — if a future session would need to know about it, log it.
+Not every edit needs a summary. Quick fixes and config tweaks that are self-evident from the code do not.
 
-## Log entry format
+## Chat summary format
 
-Keep entries short and useful. No rigid template — just include what matters:
+See `logs/CHAT_SUMMARY_TEMPLATE.md` for the full template and naming convention (`YYYYMMDD-brief-description.md`).
+
+Key sections to always fill in: Overview, Problem/Objective, Solution/Implementation, Files Changed.
+
+## Development log entry format
+
+After creating the summary file, add an entry at the top of `logs/DEVELOPMENT_LOG.md`:
 
 ```
-## [YYYY-MM-DD] Short title
+## YYYY-MM-DD
 
-What was done, why, and any important context. Mention files changed if relevant.
+### [Category] Brief description
+→ [chat-summaries/YYYYMMDD-description.md](chat-summaries/YYYYMMDD-description.md)
+- Key point 1
+- Key point 2
 ```
-
-## Log rotation
-
-When the active log file exceeds ~5000 characters:
-1. Create the next numbered file (e.g., `LOG_002.md`).
-2. Add a row to `logs/LOG_INDEX.md`.
-3. Never modify old log files — they are permanent history.
-
-## Session start
-
-At the start of every new chat session:
-1. Read `memory-bank/activeContext.md` to understand current state.
-2. Read `logs/LOG_INDEX.md` and the most recent log file for detailed history.
-3. If files contain only placeholders, ask the user to fill in the memory bank.
-4. State your understanding of the current state and ask how to proceed.
 
 ## Long sessions
 
-If a session has been running for a while and the context window may be getting full, proactively suggest starting a fresh chat. Update `activeContext.md` and append a log entry before doing so.
+If a session has been running for a while and the context window may be filling up, proactively suggest starting a fresh chat. Update `activeContext.md` and create a chat summary before doing so.

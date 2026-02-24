@@ -8,30 +8,39 @@
 
 ## Directory Structure
 
+<!-- Show the top-level layout. Describe what each folder is for.
+     Don't paste the full tree — just the meaningful top-level structure. -->
 ```
-[project-root]/
-├── [folder]/          # [what lives here]
-├── [folder]/          # [what lives here]
-└── [folder]/          # [what lives here]
+project-root/
+├── src/           # source files
+├── tests/         # test files
+└── ...
 ```
 
 ## Naming Conventions
 
+<!-- List the conventions in use. The AI will follow these when creating new files. -->
+
 | Thing | Convention | Example |
 |-------|-----------|---------|
-| Files | [e.g., kebab-case] | [e.g., user-profile.ts] |
-| Functions | [e.g., camelCase] | [e.g., getUserById()] |
-| Classes | [e.g., PascalCase] | [e.g., UserRepository] |
+| Files | kebab-case | `user-profile.ts` |
+| Functions | camelCase | `getUserById()` |
+| Classes | PascalCase | `UserRepository` |
 
 ## Architecture Patterns
 
-### [Pattern Name]
-[Brief description of how it's used]
-- Reference: `[path/to/canonical/example]`
+<!-- Describe the main structural patterns in use. For each, link to a canonical example
+     in the codebase rather than pasting code here. -->
+
+### Pattern Name
+Brief description of how it works in this project.
+- Reference: `path/to/canonical/example`
 
 ## Anti-Patterns
 
-- [ANTI-PATTERN 1, e.g., "Never use `any` — use `unknown` + type guard"]
+<!-- Things the AI should never do in this codebase. Be specific. -->
+- Never do X — use Y instead
+- Avoid Z because it causes [problem]
 
 ---
 

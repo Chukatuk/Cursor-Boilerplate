@@ -8,25 +8,29 @@
 
 ## Current Focus
 
-[WHAT ARE YOU WORKING ON RIGHT NOW]
+<!-- What are you actively working on right now? One or two sentences. -->
 
 ## Work in Progress
 
-- [ ] [TASK IN PROGRESS]
+<!-- Tasks currently in flight — not done, not abandoned. -->
+- [ ] Task in progress
 
 ## Recently Completed
 
-- [x] [RECENTLY COMPLETED TASK] — [DATE]
+<!-- What was finished in the last session or two? Helps the AI understand momentum. -->
+- [x] Completed task — [DATE]
 
 ## Immediate Next Steps
 
-1. [NEXT STEP 1]
-2. [NEXT STEP 2]
-3. [NEXT STEP 3]
+<!-- Ordered list of what comes next. The AI uses this when you say "continue". -->
+1. Next step
+2. Next step
+3. Next step
 
 ## Notes / Decisions Made
 
-- [DATE]: [DECISION AND REASONING]
+<!-- Decisions with reasoning. Future sessions shouldn't re-litigate these. -->
+- [DATE]: Decision and why it was made
 
 ---
 

@@ -19,6 +19,7 @@ Developers and power users who want a distraction-free task manager that works o
 
 ## Primary Objectives
 
+<!-- List 2–5 concrete goals. What does success look like? -->
 - [ ] Keyboard-driven task management (create, complete, delete without touching the mouse)
 - [ ] Offline-first with local storage, sync to server when online
 - [ ] Sub-200ms UI response time for all interactions
@@ -26,6 +27,7 @@ Developers and power users who want a distraction-free task manager that works o
 ## Scope
 
 ### In scope
+<!-- What is this project responsible for? -->
 - Task CRUD (create, read, update, delete)
 - Keyboard shortcuts for all actions
 - Offline storage with IndexedDB
@@ -33,6 +35,7 @@ Developers and power users who want a distraction-free task manager that works o
 - Dark mode
 
 ### Out of scope
+<!-- What are you explicitly NOT building? This prevents scope creep. -->
 - Team collaboration / shared lists
 - Mobile native app (web-only for now)
 - Calendar integration
@@ -40,6 +43,7 @@ Developers and power users who want a distraction-free task manager that works o
 
 ## Success Criteria
 
+<!-- How will you know this project succeeded? Measurable or observable outcomes. -->
 - All core flows work without a mouse
 - App works fully offline, syncs without data loss when reconnected
 - Lighthouse performance score > 95
