@@ -100,11 +100,11 @@ copy_dir() {
     return
   fi
 
-  find "$src_dir" -type f | while read -r src_file; do
+  while IFS= read -r src_file; do
     local relative="${src_file#$src_dir/}"
     local dest_file="$dest_dir/$relative"
     copy_file "$src_file" "$dest_file"
-  done
+  done < <(find "$src_dir" -type f)
 }
 
 # ── Copy .cursor config ───────────────────────────────────────────────────────

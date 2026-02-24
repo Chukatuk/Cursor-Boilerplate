@@ -33,7 +33,7 @@ alwaysApply: <true for global rules, false for file-scoped rules>
 
 ## Content guidelines
 
-- See `creating-rules.mdc` for full authoring best practices.
+- See `000-creating-rules.mdc` for full authoring best practices.
 - Point to canonical code files instead of pasting large blocks.
 - No generic framework docs — only project-specific patterns and constraints.
 - Include both DO and DON'T examples when the distinction is non-obvious.
